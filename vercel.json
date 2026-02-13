@@ -1,0 +1,8 @@
+{
+  "buildCommand": "cd client && npm install && npm run build",
+  "outputDirectory": "client/dist",
+  "framework": "vite",
+  "env": {
+    "VITE_API_BASE_URL": "@giftly_api_base_url"
+  }
+}
