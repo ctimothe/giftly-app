@@ -1,66 +1,150 @@
-# Giftly 🎁 — Social Wishlist with a Vibe
+# Giftly
 
-Giftly is a modern, real-time social wishlist application designed to make gifting fun, interactive, and seamless. Beyond just a list of items, it offers a "cult-like" social experience with features like **Hype Buttons**, **The Shrine (Top 4)**, **Haul Logs**, and **Gift Wrapped** analytics.
+Giftly is a modern, real-time social wishlist platform. It enables users to create and manage collaborative wishlists, track item reservations, log fulfilled items, and interact with friends' lists through real-time features like presence tracking and instant notifications.
 
-Built for the "Vibe Coding" challenge.
+## Features
 
-## ✨ Key Features
+- **Wishlists**: Create and manage themed wishlists with granular access control
+- **Real-Time Interaction**: Live item reservations, presence tracking, and instant notifications via WebSocket
+- **Shrine**: Curated top-4 items pinned to user profiles
+- **Analytics**: Wrapped-style statistics on wishlist activity
+- **Haul Log**: Track fulfilled wishes with ratings and reviews
+- **Group Contributions**: Support multiple contributors per item
+- **Privacy Controls**: Wishlist owners have visibility controls over reservation and contribution data
 
-- **Social Wishlists**: Create themed wishlists (Coquette, Dark Mode, etc.) and share them with friends.
-- **Real-Time Interaction**: See who's viewing your list, reserve items instantly, and get notified when someone contributes — all without refreshing.
-- **The Shrine**: Pin your top 4 "Holy Grail" items to your profile (inspired by Twitter/Letterboxd top 4).
-- **Gift Wrapped**: Spotify-Wrapped style analytics for your wishlist personality (e.g., "Most Delusional Wish").
-- **Haul Log**: A diary of fulfilled wishes where you rate and review gifts you've received.
-- **Group Gifting**: Friends can "chip in" to expensive items.
-- **Spoiler Protection**: Owners can't see who reserved what or how much is collected, keeping the surprise alive.
+## Tech Stack
 
-## 🛠 Tech Stack
+### Frontend
+- React 18+ with TypeScript
+- Vite for build optimization
+- Tailwind CSS for styling
+- Framer Motion for animations
+- Socket.IO client for real-time communication
 
-- **Frontend**: React (Vite), TypeScript, Tailwind CSS, Framer Motion, Lucide React
-- **Backend**: Node.js, Express, Socket.IO (Real-time), Prisma ORM
-- **Database**: PostgreSQL (Supabase)
-- **Authentication**: JWT (HttpOnly cookies + local storage fallback)
+### Backend
+- Node.js with Express.js
+- TypeScript for type safety
+- Prisma ORM for database access
+- Socket.IO for WebSocket communication
+- Zod for runtime validation
 
-## 🚀 Getting Started
+### Database
+- PostgreSQL
+
+### Authentication
+- JWT-based authentication with HttpOnly cookies
+
+## Getting Started
 
 ### Prerequisites
-- Node.js 18+
-- PostgreSQL database (or Supabase URL)
+- Node.js 18 or higher
+- npm or yarn
+- PostgreSQL database
 
 ### Installation
 
-1. **Clone the repository**
+1. Clone the repository
    ```bash
-   git clone <repo-url>
-   cd wishlist_app
+   git clone https://github.com/ctimothe/giftly-app.git
+   cd giftly-app
    ```
 
-2. **Setup Backend**
+2. Set up environment variables
+   ```bash
+   # Backend
+   cd server
+   cp .env.example .env
+   # Configure DATABASE_URL, JWT_SECRET, and other required variables
+   
+   # Frontend
+   cd ../client
+   cp .env.example .env
+   # Configure API endpoint and other client variables
+   ```
+
+3. Install dependencies
+   ```bash
+   cd server && npm install
+   cd ../client && npm install
+   ```
+
+4. Initialize database
    ```bash
    cd server
-   npm install
-   cp .env.example .env  # (Or create .env with DATABASE_URL & JWT_SECRET)
-   npx prisma migrate dev --name init  # Apply DB schema
-   npm run dev
+   npx prisma migrate deploy
    ```
 
-3. **Setup Frontend**
+5. Start the development servers
    ```bash
-   cd client
-   npm install
-   npm run dev
+   # Terminal 1: Backend
+   cd server && npm run dev
+   
+   # Terminal 2: Frontend
+   cd client && npm run dev
    ```
 
-4. **Visit** `http://localhost:3000`
+6. Access the application at `http://localhost:5173`
 
-## 🧠 Product Decisions & "Vibe"
-*Notes for Robert:*
+## Project Structure
 
-1.  **"Steal This" Mechanic**: I noticed people love curating lists from others. I added a "Steal" button that clones an item to your own list but keeps a "stolen from @username" provenance tag, adding a social layer to curation.
-2.  **Hype Button**: Instead of a binary "like", I implemented a "hold-to-hype" button that streams particles and updates counters in real-time. It feels more visceral and "TikTok-coded".
-3.  **The Shrine**: Limited to 4 items to force curation. It tells visitors immediately what the user *really* wants.
-4.  **Spoiler Protection**: Critical strict separation. The owner view hides all reservation/contribution data to ensure the platform can be used for genuine surprises.
+```
+.
+├── client/               # React frontend application
+│   ├── src/
+│   │   ├── components/   # Reusable UI components
+│   │   ├── pages/        # Page components
+│   │   ├── context/      # React context for state management
+│   │   └── lib/          # Utility functions
+│   └── package.json
+├── server/               # Express backend application
+│   ├── src/
+│   │   ├── routes/       # API route handlers
+│   │   ├── middleware/   # Express middleware
+│   │   ├── services/     # Business logic services
+│   │   ├── utils/        # Utility functions
+│   │   └── lib/          # Library integrations
+│   ├── prisma/           # Database schema and migrations
+│   └── package.json
+└── docker-compose.yml    # Docker configuration for local development
+```
 
-## 📦 Deployment
+## API Documentation
 
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions on Railway (Backend) and Vercel (Frontend).
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for API endpoint documentation and deployment instructions.
+
+## Development
+
+### Building
+
+```bash
+# Client
+cd client && npm run build
+
+# Server
+cd server && npm run build
+```
+
+### Type Checking
+
+```bash
+# Client
+cd client && npm run type-check
+
+# Server
+cd server && npm run type-check
+```
+
+### Running Tests
+
+```bash
+cd client && npm test
+cd server && npm test
+```
+
+## Deployment
+
+Refer to [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
+
+## License
+
+Proprietary. All rights reserved.
