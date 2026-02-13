@@ -59,8 +59,34 @@ app.get('/', (_req: express.Request, res: express.Response) => {
     res.json({ message: 'Social Wishlist API', status: 'running' });
 });
 
-app.get('/health', (_req: express.Request, res: express.Response) => {
-    res.json({ status: 'ok' });
+// Enhanced health check for monitoring/cronjobs
+app.get('/health', async (_req: express.Request, res: express.Response) => {
+    try {
+        // Check database connectivity
+        const { prisma } = await import('./lib/prisma');
+        await prisma.$queryRaw`SELECT 1`;
+        
+        const environment = process.env.NODE_ENV || 'development';
+        const apiBaseUrl = process.env.NODE_ENV === 'production'
+            ? 'https://giftly-app.onrender.com'
+            : 'http://localhost:5000';
+
+        res.status(200).json({
+            status: 'healthy',
+            timestamp: new Date().toISOString(),
+            uptime: process.uptime(),
+            environment,
+            apiBaseUrl,
+            database: 'connected'
+        });
+    } catch (error) {
+        res.status(503).json({
+            status: 'unhealthy',
+            timestamp: new Date().toISOString(),
+            database: 'disconnected',
+            error: error instanceof Error ? error.message : 'Unknown error'
+        });
+    }
 });
 
 app.use(notFoundHandler);
