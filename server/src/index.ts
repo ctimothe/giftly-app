@@ -63,7 +63,7 @@ app.get('/', (_req: express.Request, res: express.Response) => {
 app.get('/health', async (_req: express.Request, res: express.Response) => {
     try {
         // Check database connectivity
-        const { prisma } = await import('./lib/prisma');
+        const prisma = (await import('./lib/prisma')).default;
         await prisma.$queryRaw`SELECT 1`;
         
         const environment = process.env.NODE_ENV || 'development';
