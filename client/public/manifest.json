@@ -1,0 +1,17 @@
+{
+    "name": "Giftly — Social Wishlist",
+    "short_name": "Giftly",
+    "description": "Create wishlists, share with friends, let them secretly reserve gifts or chip in together. Surprise-proof.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#09090b",
+    "theme_color": "#09090b",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/vite.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        }
+    ]
+}
