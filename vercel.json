@@ -1,6 +1,6 @@
 {
-  "buildCommand": "bash build.sh",
-  "outputDirectory": "client/dist",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "framework": "vite"
 }
 
