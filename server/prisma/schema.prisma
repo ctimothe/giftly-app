@@ -1,0 +1,127 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  name          String         @default("")
+  passwordHash  String
+  avatarUrl     String?
+
+  // Gamification fields
+  karma         Int            @default(0)
+  level         Int            @default(1)
+  streakDays    Int            @default(0)
+  lastLoginAt   DateTime?
+
+  // The Shrine - JSON array of up to 4 pinned item IDs
+  shrineItemIds String         @default("[]")
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  wishlists     Wishlist[]
+  contributions Contribution[]
+  hauls         Haul[]
+}
+
+model Wishlist {
+  id            String   @id @default(uuid())
+  ownerId       String
+  owner         User     @relation(fields: [ownerId], references: [id])
+  title         String
+  description   String?
+  coverImageUrl String?
+  theme         String   @default("violet-pink")
+  layout        String   @default("grid")
+  stickers      String?
+  isPublic      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  items         Item[]
+  notes         Note[]
+}
+
+model Item {
+  id              String   @id @default(uuid())
+  wishlistId      String
+  wishlist        Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+
+  url             String?
+  imageUrl        String?
+  title           String
+  price           Decimal?
+  currency        String   @default("USD")
+  story           String?
+
+  isReserved      Boolean  @default(false)
+  reservedBy      String?
+  collectedAmount Decimal  @default(0)
+  hypeCount       Int      @default(0)
+
+  // Steal provenance - username of original owner
+  stolenFrom      String?
+
+  // Fulfillment tracking for Haul Log
+  isFulfilled     Boolean  @default(false)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  contributions   Contribution[]
+  haul            Haul?
+}
+
+model Contribution {
+  id              String   @id @default(uuid())
+  itemId          String
+  item            Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  userId          String?
+  user            User?    @relation(fields: [userId], references: [id])
+  contributorName String?
+
+  amount          Decimal
+  message         String?
+
+  createdAt       DateTime @default(now())
+}
+
+// Sticky notes / guestbook on a wishlist
+model Note {
+  id         String   @id @default(uuid())
+  wishlistId String
+  wishlist   Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
+
+  author     String
+  content    String
+  color      String   @default("yellow")
+  posX       Float    @default(0)
+  posY       Float    @default(0)
+  rotation   Float    @default(0)
+
+  createdAt  DateTime @default(now())
+}
+
+// Haul Log - post-fulfillment diary entry
+model Haul {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  itemId     String   @unique
+  item       Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  rating     Int      @default(0)
+  review     String?
+  photoUrl   String?
+
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
